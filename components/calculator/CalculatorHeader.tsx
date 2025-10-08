@@ -10,7 +10,7 @@ interface CalculatorHeaderProps {
 
 export function CalculatorHeader({ onReset, onDownload }: CalculatorHeaderProps) {
   return (
-    <div className="mb-6 flex items-center justify-between">
+    <div className="mb-6 flex items-start justify-between">
       <div>
         <h1 className="text-3xl font-medium text-foreground">Lifestyle Calculator</h1>
         <p className="text-muted-foreground">
@@ -19,12 +19,12 @@ export function CalculatorHeader({ onReset, onDownload }: CalculatorHeaderProps)
       </div>
       <div className="flex gap-2">
         <Button variant="outline" size="sm" onClick={onReset}>
-          <RotateCcw className="mr-2 h-4 w-4" />
-          Reset
+          <RotateCcw className="h-4 w-4 sm:mr-2" />
+          <span className="hidden sm:inline">Reset</span>
         </Button>
         <Button variant="outline" size="sm" onClick={onDownload}>
-          <Download className="mr-2 h-4 w-4" />
-          Download
+          <Download className="h-4 w-4 sm:mr-2" />
+          <span className="hidden sm:inline">Download</span>
         </Button>
       </div>
     </div>

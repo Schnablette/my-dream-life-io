@@ -21,32 +21,33 @@ export function ExpenseList({ expenses, onEdit, onDelete }: ExpenseListProps) {
       <h3 className="mb-3 font-semibold text-foreground">Expense Items</h3>
       <div className="space-y-2">
         {expenses.map((expense) => (
-          <div
-            key={expense.id}
-            className="flex items-center gap-2 rounded-md border border-border bg-muted/30 p-3"
+          <ul
+            key={expense.id} 
           >
-            <GripVertical className="h-4 w-4 text-muted-foreground" />
-            <span className="flex-1 text-sm text-foreground">{expense.name}</span>
-            <span className="text-sm font-medium text-foreground">
-              {formatCurrency(expense.amount)}/{formatFrequency(expense.frequency)}
-            </span>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8"
-              onClick={() => onEdit(expense.id)}
-            >
-              <Pencil className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8"
-              onClick={() => onDelete(expense.id)}
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
-          </div>
+            <li className="flex items-center gap-2 rounded-md border border-border bg-white px-3 py-1">
+              <span className="flex-1 text-sm text-foreground">{expense.name}</span>
+              <span className="text-sm font-medium text-foreground">
+                {formatCurrency(expense.amount)}/{formatFrequency(expense.frequency)}
+              </span>
+
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+                onClick={() => onEdit(expense.id)}
+              >
+                <Pencil className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 hover:text-destructive"
+                onClick={() => onDelete(expense.id)}
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </li>
+          </ul>
         ))}
       </div>
     </div>

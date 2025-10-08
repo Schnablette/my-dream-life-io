@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef } from "react"
+import { toPng } from "html-to-image"
 import type { Expense, Frequency } from "./types"
 import { frequencyMultipliers } from "./types"
 import { CalculatorHeader } from "./CalculatorHeader"
@@ -14,6 +15,7 @@ export function Calculator() {
   const [taxRate, setTaxRate] = useState(25)
   const [savingsRate, setSavingsRate] = useState(20)
   const [editingId, setEditingId] = useState<string | null>(null)
+  const calculatorRef = useRef<HTMLDivElement>(null)
 
   const calculateAnnualSalary = () => {
     const totalAnnualExpenses = expenses.reduce((sum, expense) => {
@@ -51,30 +53,51 @@ export function Calculator() {
     setSavingsRate(20)
   }
 
-  const handleDownload = () => {
-    // TODO: Implement download functionality
-    console.log("Download functionality to be implemented")
+  const handleDownload = async () => {
+    if (!calculatorRef.current) return
+
+    try {
+      const dataUrl = await toPng(calculatorRef.current, {
+        cacheBust: true,
+        backgroundColor: "#FDF4F2",
+        pixelRatio: 2, // Higher quality (2x resolution)
+        style: {
+          transform: "scale(1)",
+          transformOrigin: "center",
+        },
+      })
+
+      // Create download link
+      const link = document.createElement("a")
+      link.download = `lifestyle-calculator-${new Date().toISOString().split("T")[0]}.png`
+      link.href = dataUrl
+      link.click()
+    } catch (error) {
+      console.error("Error capturing calculator:", error)
+    }
   }
 
   return (
-    <div className="mx-auto max-w-6xl px-6 py-8">
-      <CalculatorHeader onReset={reset} onDownload={handleDownload} />
+    <div ref={calculatorRef}>
+      <div className="mx-auto max-w-6xl py-6">
+        <CalculatorHeader onReset={reset} onDownload={handleDownload} />
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        <div className="space-y-6">
+        <div className="grid gap-6 lg:grid-cols-2">
+          <div className="space-y-6">
             <h2 className="mb-4 text-xl font-semibold text-foreground">Lifestyle</h2>
             <ExpenseForm onAddExpense={addExpense} />
             <ExpenseList expenses={expenses} onEdit={setEditingId} onDelete={deleteExpense} />
           </div>
 
-        <div className="space-y-6">
-          <SalaryResults annualSalary={annualSalary} monthlySalary={monthlySalary} />
-          <RatesSettings
-            taxRate={taxRate}
-            savingsRate={savingsRate}
-            onTaxRateChange={setTaxRate}
-            onSavingsRateChange={setSavingsRate}
-          />
+          <div className="space-y-6">
+            <SalaryResults annualSalary={annualSalary} monthlySalary={monthlySalary} />
+            <RatesSettings
+              taxRate={taxRate}
+              savingsRate={savingsRate}
+              onTaxRateChange={setTaxRate}
+              onSavingsRateChange={setSavingsRate}
+            />
+          </div>
         </div>
       </div>
     </div>

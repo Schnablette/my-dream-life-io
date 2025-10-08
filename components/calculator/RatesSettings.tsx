@@ -22,11 +22,11 @@ export function RatesSettings({ taxRate, savingsRate, onTaxRateChange, onSavings
             <Slider
               value={[taxRate]}
               onValueChange={(value) => onTaxRateChange(value[0])}
-              max={100}
+              max={99}
               step={1}
               className="flex-1"
             />
-            <span className="text-sm text-muted-foreground">100%</span>
+            <span className="text-sm text-muted-foreground">99%</span>
           </div>
         </div>
 
@@ -41,11 +41,11 @@ export function RatesSettings({ taxRate, savingsRate, onTaxRateChange, onSavings
             <Slider
               value={[savingsRate]}
               onValueChange={(value) => onSavingsRateChange(value[0])}
-              max={100}
+              max={99}
               step={1}
               className="flex-1"
             />
-            <span className="text-sm text-muted-foreground">100%</span>
+            <span className="text-sm text-muted-foreground">99%</span>
           </div>
         </div>
       </div>
