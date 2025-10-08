@@ -43,8 +43,23 @@ export function Calculator() {
     ])
   }
 
+  const updateExpense = (id: string, name: string, amount: number, frequency: Frequency) => {
+    setExpenses(expenses.map((e) => 
+      e.id === id ? { ...e, name, amount, frequency } : e
+    ))
+    setEditingId(null)
+  }
+
   const deleteExpense = (id: string) => {
     setExpenses(expenses.filter((e) => e.id !== id))
+  }
+
+  const handleEdit = (id: string) => {
+    setEditingId(id)
+  }
+
+  const cancelEdit = () => {
+    setEditingId(null)
   }
 
   const reset = () => {
@@ -85,8 +100,13 @@ export function Calculator() {
         <div className="grid gap-6 lg:grid-cols-2">
           <div className="space-y-6">
             <h2 className="mb-4 text-xl font-semibold text-foreground">Lifestyle</h2>
-            <ExpenseForm onAddExpense={addExpense} />
-            <ExpenseList expenses={expenses} onEdit={setEditingId} onDelete={deleteExpense} />
+            <ExpenseForm 
+              onAddExpense={addExpense} 
+              onUpdateExpense={updateExpense}
+              editingExpense={expenses.find(e => e.id === editingId)}
+              onCancelEdit={cancelEdit}
+            />
+            <ExpenseList expenses={expenses} onEdit={handleEdit} onDelete={deleteExpense} />
           </div>
 
           <div className="space-y-6">

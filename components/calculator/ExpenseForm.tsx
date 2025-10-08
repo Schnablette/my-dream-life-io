@@ -1,14 +1,17 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import type { Frequency } from "./types"
+import type { Frequency, Expense } from "./types"
 
 interface ExpenseFormProps {
   onAddExpense: (name: string, amount: number, frequency: Frequency) => void
+  onUpdateExpense?: (id: string, name: string, amount: number, frequency: Frequency) => void
+  editingExpense?: Expense
+  onCancelEdit?: () => void
 }
 
 interface ValidationErrors {
@@ -16,12 +19,23 @@ interface ValidationErrors {
   amount?: string
 }
 
-export function ExpenseForm({ onAddExpense }: ExpenseFormProps) {
+export function ExpenseForm({ onAddExpense, onUpdateExpense, editingExpense, onCancelEdit }: ExpenseFormProps) {
   const [newExpenseName, setNewExpenseName] = useState("")
   const [newExpenseAmount, setNewExpenseAmount] = useState("")
   const [newExpenseFrequency, setNewExpenseFrequency] = useState<Frequency>("year")
   const [errors, setErrors] = useState<ValidationErrors>({})
   const [touched, setTouched] = useState({ name: false, amount: false })
+
+  // Populate form when editing
+  useEffect(() => {
+    if (editingExpense) {
+      setNewExpenseName(editingExpense.name)
+      setNewExpenseAmount(editingExpense.amount.toString())
+      setNewExpenseFrequency(editingExpense.frequency)
+      setErrors({})
+      setTouched({ name: false, amount: false })
+    }
+  }, [editingExpense])
 
   const validateName = (name: string): string | undefined => {
     if (!name.trim()) {
@@ -81,7 +95,7 @@ export function ExpenseForm({ onAddExpense }: ExpenseFormProps) {
     setErrors(prev => ({ ...prev, amount: error }))
   }
 
-  const handleAddExpense = () => {
+  const handleSubmit = () => {
     // Mark all fields as touched
     setTouched({ name: true, amount: true })
 
@@ -94,10 +108,15 @@ export function ExpenseForm({ onAddExpense }: ExpenseFormProps) {
       amount: amountError,
     })
 
-    // If no errors, add the expense
+    // If no errors, add or update the expense
     if (!nameError && !amountError) {
       const amount = Number.parseFloat(newExpenseAmount)
-      onAddExpense(newExpenseName.trim(), amount, newExpenseFrequency)
+      
+      if (editingExpense && onUpdateExpense) {
+        onUpdateExpense(editingExpense.id, newExpenseName.trim(), amount, newExpenseFrequency)
+      } else {
+        onAddExpense(newExpenseName.trim(), amount, newExpenseFrequency)
+      }
       
       // Reset form
       setNewExpenseName("")
@@ -106,6 +125,15 @@ export function ExpenseForm({ onAddExpense }: ExpenseFormProps) {
       setErrors({})
       setTouched({ name: false, amount: false })
     }
+  }
+
+  const handleCancel = () => {
+    setNewExpenseName("")
+    setNewExpenseAmount("")
+    setNewExpenseFrequency("year")
+    setErrors({})
+    setTouched({ name: false, amount: false })
+    onCancelEdit?.()
   }
 
   return (
@@ -121,7 +149,7 @@ export function ExpenseForm({ onAddExpense }: ExpenseFormProps) {
             value={newExpenseName}
             onChange={(e) => handleNameChange(e.target.value)}
             onBlur={handleNameBlur}
-            onKeyDown={(e) => e.key === "Enter" && handleAddExpense()}
+            onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
             className={`mt-1 ${errors.name ? "border-red-500 focus-visible:ring-red-500" : ""}`}
             aria-invalid={!!errors.name}
             aria-describedby={errors.name ? "expense-name-error" : undefined}
@@ -146,7 +174,7 @@ export function ExpenseForm({ onAddExpense }: ExpenseFormProps) {
                 value={newExpenseAmount}
                 onChange={(e) => handleAmountChange(e.target.value)}
                 onBlur={handleAmountBlur}
-                onKeyDown={(e) => e.key === "Enter" && handleAddExpense()}
+                onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
                 className={`pl-7 ${errors.amount ? "border-red-500 focus-visible:ring-red-500" : ""}`}
                 aria-invalid={!!errors.amount}
                 aria-describedby={errors.amount ? "expense-cost-error" : undefined}
@@ -175,9 +203,22 @@ export function ExpenseForm({ onAddExpense }: ExpenseFormProps) {
         </div>
       </div>
 
-      <Button className="w-full bg-primary text-foreground hover:bg-primary-hover" onClick={handleAddExpense}>
-        Add Expense Item
-      </Button>
+      <div className="flex gap-2">
+        <Button 
+          className="flex-1 bg-primary text-foreground hover:bg-primary-hover" 
+          onClick={handleSubmit}
+        >
+          {editingExpense ? "Update Expense Item" : "Add Expense Item"}
+        </Button>
+        {editingExpense && (
+          <Button 
+            variant="outline"
+            onClick={handleCancel}
+          >
+            Cancel
+          </Button>
+        )}
+      </div>
     </div>
   )
 }
