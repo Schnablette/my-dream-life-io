@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Calculator } from "@/components/calculator"
+import Image from "next/image"
 
 export default function Home() {
   const [showCalculator, setShowCalculator] = useState(false)
@@ -29,34 +30,7 @@ export default function Home() {
       <main className="flex min-h-[calc(100vh-73px)] flex-col items-center justify-center px-6 py-20">
         <div className="mx-auto max-w-3xl text-center">
           <div className="mb-12 flex justify-center">
-            <svg
-              width="200"
-              height="140"
-              viewBox="0 0 200 140"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="text-[#d4758b]"
-            >
-              <path
-                d="M40 100C40 100 50 60 70 40C90 20 110 20 120 30"
-                stroke="currentColor"
-                strokeWidth="8"
-                strokeLinecap="round"
-                fill="none"
-              />
-              <circle cx="130" cy="70" r="35" stroke="currentColor" strokeWidth="8" fill="none" />
-              <circle cx="120" cy="65" r="4" fill="currentColor" />
-              <circle cx="140" cy="65" r="4" fill="currentColor" />
-              <path
-                d="M115 80C115 80 120 85 130 85C140 85 145 80 145 80"
-                stroke="currentColor"
-                strokeWidth="3"
-                strokeLinecap="round"
-                fill="none"
-              />
-              <ellipse cx="130" cy="95" rx="15" ry="8" fill="currentColor" opacity="0.3" />
-              <rect x="145" y="50" width="8" height="15" rx="4" fill="currentColor" />
-            </svg>
+            <Image src="/logo.png" alt="MyDreamLife.io" width={100} height={100} />
           </div>
 
           <h2 className="mb-4 text-balance text-5xl font-bold leading-tight text-foreground">
