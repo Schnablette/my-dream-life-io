@@ -1,4 +1,4 @@
-import '@/styles/globals.css'
+import '@/src/styles/globals.css'
 import { ThemeProvider } from '@/components/theme-provider'
 import { PageLayout } from '@/components/page-layout'
 import type { AppProps } from 'next/app'
