@@ -92,7 +92,7 @@ export function Calculator() {
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-6 py-8">
+    <div className="mx-auto max-w-6xl px-6 py-8">
         <div className="mb-6 flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-foreground">Lifestyle Calculator</h1>
@@ -167,7 +167,7 @@ export function Calculator() {
                   </div>
                 </div>
 
-                <Button className="w-full bg-[#d4758b] text-white hover:bg-[#c26577]" onClick={addExpense}>
+                <Button className="w-full bg-primary text-foreground hover:bg-[#c26577]" onClick={addExpense}>
                   Add Expense Item
                 </Button>
               </div>

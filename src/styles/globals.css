@@ -5,17 +5,19 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #252525;
+  --foreground: #070C2C;
   --card: #ffffff;
   --card-foreground: #252525;
   --popover: #ffffff;
   --popover-foreground: #252525;
-  --primary: #343434;
+  --primary: #DF6F84;
+  --primary-light: #FDF4F2;
+  --primary-hover: #b44156;
   --primary-foreground: #fafafa;
   --secondary: #f7f7f7;
   --secondary-foreground: #343434;
   --muted: #f7f7f7;
-  --muted-foreground: #8e8e8e;
+  --muted-foreground: #6C6C7A;
   --accent: #f7f7f7;
   --accent-foreground: #343434;
   --destructive: #dc2626;
@@ -46,7 +48,8 @@
   --card-foreground: #fafafa;
   --popover: #252525;
   --popover-foreground: #fafafa;
-  --primary: #fafafa;
+  --primary: #DF6F84;
+  --primary-light: #FDF4F2;
   --primary-foreground: #343434;
   --secondary: #444444;
   --secondary-foreground: #fafafa;
@@ -84,6 +87,8 @@
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-light: var(--primary-light);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);

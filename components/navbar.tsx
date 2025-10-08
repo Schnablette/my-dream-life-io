@@ -7,17 +7,17 @@ export function Navbar() {
   const router = useRouter()
 
   return (
-    <header className="border-b border-[#e8c4ba] bg-[#f5d4cc] px-6 py-4">
-      <div className="mx-auto flex max-w-7xl items-center justify-between">
+    <header className="border-b px-6 py-4">
+      <div className="mx-auto flex max-w-6xl items-center justify-between">
         <h1 
-          className="text-2xl font-bold text-[#d4758b] cursor-pointer hover:opacity-80 transition-opacity"
+          className="text-2xl text-foreground cursor-pointer hover:opacity-80 transition-opacity"
           onClick={() => router.push("/")}
         >
           MyDreamLife.io
         </h1>
         <Button
           variant="outline"
-          className="border-[#d4758b] bg-transparent text-[#d4758b] hover:bg-[#d4758b] hover:text-white"
+          className="border-primary bg-primary-light text-foreground hover:bg-primary hover:text-foreground"
           onClick={() => router.push("/calculator")}
         >
           Free Lifestyle Calculator

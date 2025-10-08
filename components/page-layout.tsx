@@ -7,7 +7,7 @@ interface PageLayoutProps {
 
 export function PageLayout({ children }: PageLayoutProps) {
   return (
-    <div className="min-h-screen bg-[#f5e6e0]">
+    <div className="min-h-screen bg-primary-light">
       <Navbar />
       <main>{children}</main>
     </div>
