@@ -12,13 +12,13 @@ export default function Home() {
         <title>MyDreamLife.io</title>
         <meta name="description" content="Why budget when you can just make more money?" />
       </Head>
-      <div className="flex min-h-[calc(100vh-73px)] flex-col items-center justify-center px-6 py-20">
+      <div className="flex min-h-100vh flex-col items-center justify-center px-6 py-20">
         <div className="mx-auto max-w-3xl text-center">
           <div className="mb-12 flex justify-center">
             <Image src="/pig.svg" alt="MyDreamLife.io" width="200" height="200" />
           </div>
 
-          <h2 className="mb-4 text-balance text-3xl font-bold leading-tight text-foreground">
+          <h2 className="mb-4 text-balance text-3xl font-medium leading-tight text-foreground">
             Budget? I don&apos;t even know it!
           </h2>
           <p className="mb-12 text-pretty text-xl text-muted-foreground">Calculate your dream lifestyle salary</p>

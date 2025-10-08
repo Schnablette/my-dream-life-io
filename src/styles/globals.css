@@ -16,7 +16,7 @@
   --primary-foreground: #fafafa;
   --secondary: #f7f7f7;
   --secondary-foreground: #343434;
-  --muted: #f7f7f7;
+  --muted: #d2d2d2;
   --muted-foreground: #6C6C7A;
   --accent: #f7f7f7;
   --accent-foreground: #343434;
@@ -30,7 +30,7 @@
   --chart-3: #3b82f6;
   --chart-4: #84cc16;
   --chart-5: #eab308;
-  --radius: 0.625rem;
+  --radius: 6px;
   --sidebar: #fafafa;
   --sidebar-foreground: #252525;
   --sidebar-primary: #343434;
