@@ -17,11 +17,7 @@ interface Expense {
   frequency: Frequency
 }
 
-interface CalculatorProps {
-  onBack: () => void
-}
-
-export function Calculator({ onBack }: CalculatorProps) {
+export function Calculator() {
   const [expenses, setExpenses] = useState<Expense[]>([])
   const [newExpenseName, setNewExpenseName] = useState("")
   const [newExpenseAmount, setNewExpenseAmount] = useState("")
@@ -96,23 +92,7 @@ export function Calculator({ onBack }: CalculatorProps) {
   }
 
   return (
-    <div className="min-h-screen bg-[#f5e6e0]">
-      <header className="border-b border-[#e8c4ba] bg-[#f5d4cc] px-6 py-4">
-        <div className="mx-auto flex max-w-7xl items-center justify-between">
-          <button onClick={onBack} className="text-2xl font-bold text-[#d4758b] hover:opacity-80">
-            MyDreamLife.io
-          </button>
-          <Button
-            variant="outline"
-            className="border-[#d4758b] bg-transparent text-[#d4758b] hover:bg-[#d4758b] hover:text-white"
-            onClick={onBack}
-          >
-            Free Lifestyle Calculator
-          </Button>
-        </div>
-      </header>
-
-      <main className="mx-auto max-w-7xl px-6 py-8">
+    <div className="mx-auto max-w-7xl px-6 py-8">
         <div className="mb-6 flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-foreground">Lifestyle Calculator</h1>
@@ -282,7 +262,6 @@ export function Calculator({ onBack }: CalculatorProps) {
             </div>
           </div>
         </div>
-      </main>
     </div>
   )
 }
