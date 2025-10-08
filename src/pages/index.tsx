@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button"
+import { Linkedin } from "lucide-react"
 import Head from "next/head"
 import Image from "next/image"
+import Link from "next/link"
 import { useRouter } from "next/router"
 
 export default function Home() {
@@ -12,8 +14,8 @@ export default function Home() {
         <title>MyDreamLife.io</title>
         <meta name="description" content="Why budget when you can just make more money?" />
       </Head>
-      <div className="flex min-h-100vh flex-col items-center justify-center px-6 py-20">
-        <div className="mx-auto max-w-3xl text-center">
+      <div className="min-h-100vh flex flex-col items-center justify-between px-6 py-20">
+        <div className="mx-auto max-w-3xl text-center ">
           <div className="mb-12 flex justify-center">
             <Image src="/pig.svg" alt="MyDreamLife.io" width="200" height="200" />
           </div>
