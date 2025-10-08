@@ -11,20 +11,100 @@ interface ExpenseFormProps {
   onAddExpense: (name: string, amount: number, frequency: Frequency) => void
 }
 
+interface ValidationErrors {
+  name?: string
+  amount?: string
+}
+
 export function ExpenseForm({ onAddExpense }: ExpenseFormProps) {
   const [newExpenseName, setNewExpenseName] = useState("")
   const [newExpenseAmount, setNewExpenseAmount] = useState("")
   const [newExpenseFrequency, setNewExpenseFrequency] = useState<Frequency>("year")
+  const [errors, setErrors] = useState<ValidationErrors>({})
+  const [touched, setTouched] = useState({ name: false, amount: false })
+
+  const validateName = (name: string): string | undefined => {
+    if (!name.trim()) {
+      return "Expense name is required"
+    }
+    if (name.trim().length < 2) {
+      return "Expense name must be at least 2 characters"
+    }
+    if (name.trim().length > 50) {
+      return "Expense name must be less than 50 characters"
+    }
+    return undefined
+  }
+
+  const validateAmount = (amount: string): string | undefined => {
+    if (!amount) {
+      return "Amount is required"
+    }
+    const numAmount = Number.parseFloat(amount)
+    if (isNaN(numAmount)) {
+      return "Amount must be a valid number"
+    }
+    if (numAmount <= 0) {
+      return "Amount must be greater than 0"
+    }
+    if (numAmount > 1000000000) {
+      return "Amount must be less than $1,000,000,000"
+    }
+    return undefined
+  }
+
+  const handleNameChange = (value: string) => {
+    setNewExpenseName(value)
+    if (touched.name) {
+      const error = validateName(value)
+      setErrors(prev => ({ ...prev, name: error }))
+    }
+  }
+
+  const handleAmountChange = (value: string) => {
+    setNewExpenseAmount(value)
+    if (touched.amount) {
+      const error = validateAmount(value)
+      setErrors(prev => ({ ...prev, amount: error }))
+    }
+  }
+
+  const handleNameBlur = () => {
+    setTouched(prev => ({ ...prev, name: true }))
+    const error = validateName(newExpenseName)
+    setErrors(prev => ({ ...prev, name: error }))
+  }
+
+  const handleAmountBlur = () => {
+    setTouched(prev => ({ ...prev, amount: true }))
+    const error = validateAmount(newExpenseAmount)
+    setErrors(prev => ({ ...prev, amount: error }))
+  }
 
   const handleAddExpense = () => {
-    if (newExpenseName.trim() && newExpenseAmount) {
+    // Mark all fields as touched
+    setTouched({ name: true, amount: true })
+
+    // Validate all fields
+    const nameError = validateName(newExpenseName)
+    const amountError = validateAmount(newExpenseAmount)
+    
+    setErrors({
+      name: nameError,
+      amount: amountError,
+    })
+
+    // If no errors, add the expense
+    if (!nameError && !amountError) {
       const amount = Number.parseFloat(newExpenseAmount)
-      if (!isNaN(amount) && amount > 0) {
-        onAddExpense(newExpenseName.trim(), amount, newExpenseFrequency)
-        setNewExpenseName("")
-        setNewExpenseAmount("")
-        setNewExpenseFrequency("year")
-      }
+      onAddExpense(newExpenseName.trim(), amount, newExpenseFrequency)
+      
+      // Reset form
+      setNewExpenseName("")
+      setNewExpenseAmount("")
+      setNewExpenseFrequency("year")
+      setErrors({})
+      setTouched({ name: false, amount: false })
     }
   }
 
@@ -39,10 +119,18 @@ export function ExpenseForm({ onAddExpense }: ExpenseFormProps) {
             id="expense-name"
             placeholder="Desired Expense"
             value={newExpenseName}
-            onChange={(e) => setNewExpenseName(e.target.value)}
+            onChange={(e) => handleNameChange(e.target.value)}
+            onBlur={handleNameBlur}
             onKeyDown={(e) => e.key === "Enter" && handleAddExpense()}
-            className="mt-1"
+            className={`mt-1 ${errors.name ? "border-red-500 focus-visible:ring-red-500" : ""}`}
+            aria-invalid={!!errors.name}
+            aria-describedby={errors.name ? "expense-name-error" : undefined}
           />
+          {errors.name && (
+            <p id="expense-name-error" className="mt-1 text-sm text-red-500">
+              {errors.name}
+            </p>
+          )}
         </div>
         <div>
           <Label htmlFor="expense-cost" className="text-foreground">
@@ -56,9 +144,12 @@ export function ExpenseForm({ onAddExpense }: ExpenseFormProps) {
                 type="number"
                 placeholder="0"
                 value={newExpenseAmount}
-                onChange={(e) => setNewExpenseAmount(e.target.value)}
+                onChange={(e) => handleAmountChange(e.target.value)}
+                onBlur={handleAmountBlur}
                 onKeyDown={(e) => e.key === "Enter" && handleAddExpense()}
-                className="pl-7"
+                className={`pl-7 ${errors.amount ? "border-red-500 focus-visible:ring-red-500" : ""}`}
+                aria-invalid={!!errors.amount}
+                aria-describedby={errors.amount ? "expense-cost-error" : undefined}
               />
             </div>
             <Select
@@ -76,6 +167,11 @@ export function ExpenseForm({ onAddExpense }: ExpenseFormProps) {
               </SelectContent>
             </Select>
           </div>
+          {errors.amount && (
+            <p id="expense-cost-error" className="mt-1 text-sm text-red-500">
+              {errors.amount}
+            </p>
+          )}
         </div>
       </div>
 

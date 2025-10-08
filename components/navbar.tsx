@@ -10,7 +10,7 @@ export function Navbar() {
     <header className="px-6 py-4">
       <div className="mx-auto flex max-w-6xl items-center justify-between">
         <h1 
-          className="text-2xl text-foreground cursor-pointer hover:opacity-80 transition-opacity"
+          className="text-2xl text-muted-foreground cursor-pointer hover:opacity-80 transition-opacity"
           onClick={() => router.push("/")}
         >
           MyDreamLife.io

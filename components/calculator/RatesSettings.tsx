@@ -14,7 +14,7 @@ export function RatesSettings({ taxRate, savingsRate, onTaxRateChange, onSavings
   return (
       <div className="space-y-6">
         <div>
-          <div className="mb-3 flex items-center justify-between">
+          <div className="mb-1 flex items-center justify-between">
             <Label className="text-base font-semibold text-foreground">Average Tax Rate - {taxRate}%</Label>
           </div>
           <div className="flex items-center gap-4">
@@ -31,7 +31,7 @@ export function RatesSettings({ taxRate, savingsRate, onTaxRateChange, onSavings
         </div>
 
         <div>
-          <div className="mb-3 flex items-center justify-between">
+          <div className="mb-1 flex items-center justify-between">
             <Label className="text-base font-semibold text-foreground">
               Average Savings Rate - {savingsRate}%
             </Label>
