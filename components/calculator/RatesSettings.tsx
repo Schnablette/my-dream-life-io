@@ -26,7 +26,7 @@ export function RatesSettings({ taxRate, savingsRate, onTaxRateChange, onSavings
               step={1}
               className="flex-1"
             />
-            <span className="text-sm text-muted-foreground">99%</span>
+            <span className="text-sm text-muted-foreground">100%</span>
           </div>
         </div>
 
@@ -45,8 +45,17 @@ export function RatesSettings({ taxRate, savingsRate, onTaxRateChange, onSavings
               step={1}
               className="flex-1"
             />
-            <span className="text-sm text-muted-foreground">99%</span>
+            <span className="text-sm text-muted-foreground">100%</span>
           </div>
+        </div>
+
+        <div className="border-t border-border pt-6 space-y-2">
+          <h2 className="text-sm font-semibold text-foreground">What is a reverse budget?</h2>
+          <p className="text-sm text-muted-foreground">
+            A traditional budget starts with your income and figures out what's left over. A reverse budget works the
+            other way. You decide what you want your life to look like, add up what it costs, and use that number to set
+            your income goal. It turns budgeting from a ceiling into a floor.
+          </p>
         </div>
       </div>
   )

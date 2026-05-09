@@ -99,8 +99,7 @@ export function Calculator() {
 
         <div className="grid gap-6 lg:grid-cols-2">
           <div className="space-y-6">
-            <h2 className="mb-4 text-xl font-semibold text-foreground">Lifestyle</h2>
-            <ExpenseForm 
+<ExpenseForm 
               onAddExpense={addExpense} 
               onUpdateExpense={updateExpense}
               editingExpense={expenses.find(e => e.id === editingId)}
