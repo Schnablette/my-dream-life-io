@@ -2,16 +2,19 @@
 
 import { useState, useRef } from "react"
 import { toPng } from "html-to-image"
-import type { Expense, Frequency } from "./types"
-import { frequencyMultipliers } from "./types"
+import type { Expense, Frequency, LifeEvent } from "./types"
+import { frequencyMultipliers, calculateEventAnnualImpact } from "./types"
 import { CalculatorHeader } from "./CalculatorHeader"
 import { ExpenseForm } from "./ExpenseForm"
 import { ExpenseList } from "./ExpenseList"
+import { EventForm } from "./EventForm"
+import { EventList } from "./EventList"
 import { SalaryResults } from "./SalaryResults"
 import { RatesSettings } from "./RatesSettings"
 
 export function Calculator() {
   const [expenses, setExpenses] = useState<Expense[]>([])
+  const [events, setEvents] = useState<LifeEvent[]>([])
   const [taxRate, setTaxRate] = useState(25)
   const [savingsRate, setSavingsRate] = useState(20)
   const [editingId, setEditingId] = useState<string | null>(null)
@@ -22,10 +25,14 @@ export function Calculator() {
       return sum + expense.amount * frequencyMultipliers[expense.frequency]
     }, 0)
 
+    const totalEventImpact = events.reduce((sum, event) => {
+      return sum + calculateEventAnnualImpact(event.impacts)
+    }, 0)
+
     const taxDecimal = taxRate / 100
     const savingsDecimal = savingsRate / 100
 
-    return totalAnnualExpenses / ((1 - taxDecimal) * (1 - savingsDecimal))
+    return (totalAnnualExpenses + totalEventImpact) / ((1 - taxDecimal) * (1 - savingsDecimal))
   }
 
   const annualSalary = calculateAnnualSalary()
@@ -62,8 +69,17 @@ export function Calculator() {
     setEditingId(null)
   }
 
+  const addEvent = (event: LifeEvent) => {
+    setEvents([...events, event])
+  }
+
+  const deleteEvent = (id: string) => {
+    setEvents(events.filter((e) => e.id !== id))
+  }
+
   const reset = () => {
     setExpenses([])
+    setEvents([])
     setTaxRate(25)
     setSavingsRate(20)
   }
@@ -99,13 +115,22 @@ export function Calculator() {
 
         <div className="grid gap-6 lg:grid-cols-2">
           <div className="space-y-6">
-<ExpenseForm 
-              onAddExpense={addExpense} 
-              onUpdateExpense={updateExpense}
-              editingExpense={expenses.find(e => e.id === editingId)}
-              onCancelEdit={cancelEdit}
-            />
-            <ExpenseList expenses={expenses} onEdit={handleEdit} onDelete={deleteExpense} />
+            <div>
+              <h3 className="mb-3 font-semibold text-foreground">Expenses</h3>
+              <ExpenseForm
+                onAddExpense={addExpense}
+                onUpdateExpense={updateExpense}
+                editingExpense={expenses.find((e) => e.id === editingId)}
+                onCancelEdit={cancelEdit}
+              />
+              <ExpenseList expenses={expenses} onEdit={handleEdit} onDelete={deleteExpense} />
+            </div>
+
+            <div>
+              <h3 className="mb-3 font-semibold text-foreground">Life Events</h3>
+              <EventForm onAddEvent={addEvent} />
+              <EventList events={events} onDelete={deleteEvent} />
+            </div>
           </div>
 
           <div className="space-y-6">
