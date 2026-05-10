@@ -9,6 +9,7 @@ MyDreamLife.io is a lifestyle salary calculator that helps you determine exactly
 ## Features
 
 - 💰 **Lifestyle Calculator**: Add and manage all your lifestyle expenses with customizable frequencies (daily, weekly, monthly, yearly)
+- 🏠 **Life Events**: Model one-time purchases (car, house, etc.) with loan terms and interest rates — automatically calculates monthly payments and factors them into your required salary
 - 📊 **Automatic Salary Calculation**: Instantly see the annual and monthly salary needed based on your expenses, tax rate, and savings goals
 - ⚙️ **Customizable Rates**: Adjust tax and savings rates to match your financial situation
 - 📸 **Export Results**: Download your calculator results as a high-quality image to share or save
@@ -63,13 +64,24 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 The calculator uses a simple formula to determine your required salary:
 
 ```
-Required Salary = Total Annual Expenses / ((1 - Tax Rate) × (1 - Savings Rate))
+Required Salary = (Total Annual Expenses + Annual Event Impact) / ((1 - Tax Rate) × (1 - Savings Rate))
 ```
 
 1. Add your expenses with their frequency (daily, weekly, monthly, or yearly)
-2. Set your expected tax rate percentage
-3. Set your desired savings rate percentage
+2. Add life events (e.g. buying a car) — choose a loan term and interest rate to calculate the monthly payment
+3. Set your expected tax rate and desired savings rate
 4. The calculator automatically shows your required annual and monthly salary
+
+### Life Events
+
+Life events model financial changes that affect your required salary. The current event type is **Purchase** — entering a price, loan term, and interest rate calculates the monthly payment using the standard amortization formula:
+
+```
+Monthly Payment = Price × r / (1 − (1 + r)^−n)
+// r = monthly interest rate, n = loan term in months
+```
+
+The architecture is built to support additional event types in the future (income changes, job changes, etc.).
 
 ## Project Structure
 
@@ -77,9 +89,12 @@ Required Salary = Total Annual Expenses / ((1 - Tax Rate) × (1 - Savings Rate))
 my-dream-life-io/
 ├── components/
 │   ├── calculator/          # Calculator component modules
-│   │   ├── Calculator.tsx
-│   │   ├── ExpenseForm.tsx
-│   │   ├── ExpenseList.tsx
+│   │   ├── Calculator.tsx   # Main orchestrator — state, calculation, layout
+│   │   ├── types.ts         # Expense, LifeEvent, EventImpact types + PMT formula
+│   │   ├── ExpenseForm.tsx  # Add/edit recurring expenses
+│   │   ├── ExpenseList.tsx  # Recurring expense list
+│   │   ├── EventForm.tsx    # Add life events (purchases, etc.)
+│   │   ├── EventList.tsx    # Life event list with monthly impact
 │   │   ├── SalaryResults.tsx
 │   │   └── RatesSettings.tsx
 │   └── ui/                  # Reusable UI components

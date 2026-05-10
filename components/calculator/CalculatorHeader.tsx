@@ -12,7 +12,7 @@ export function CalculatorHeader({ onReset, onDownload }: CalculatorHeaderProps)
   return (
     <div className="mb-6 flex items-start justify-between">
       <div>
-        <h1 className="text-3xl font-medium text-foreground">Lifestyle Calculator</h1>
+        <h1 className="text-3xl font-bold text-foreground">Reverse Budget Calculator</h1>
         <p className="text-muted-foreground">
           Enter expenses to reverse calculate the salary needed to cover them
         </p>
