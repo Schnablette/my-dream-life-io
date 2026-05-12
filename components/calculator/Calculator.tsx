@@ -116,7 +116,7 @@ export function Calculator() {
         <div className="grid gap-6 lg:grid-cols-2">
           <div className="space-y-6">
             <div>
-              <h3 className="mb-3 font-semibold text-foreground">Expenses</h3>
+              <h3 className="mb-3 font-semibold text-foreground">Recurring Expenses</h3>
               <ExpenseForm
                 onAddExpense={addExpense}
                 onUpdateExpense={updateExpense}
@@ -127,7 +127,7 @@ export function Calculator() {
             </div>
 
             <div>
-              <h3 className="mb-3 font-semibold text-foreground">Life Events</h3>
+              <h3 className="mb-3 font-semibold text-foreground">Big Purchases</h3>
               <EventForm onAddEvent={addEvent} />
               <EventList events={events} onDelete={deleteEvent} />
             </div>
