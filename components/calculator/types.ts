@@ -22,9 +22,15 @@ export interface Purchase {
   annualInterestRate: number
 }
 
+export interface CashPurchase {
+  price: number
+  spreadMonths: number
+}
+
 export type EventImpact =
   | { type: "add_expense"; expense: Omit<Expense, "id"> }
   | { type: "add_loan"; purchase: Purchase }
+  | { type: "add_cash_purchase"; purchase: CashPurchase }
   | { type: "income_change"; annualAmount: number }
 
 export type EventCategory = "purchase" | "income" | "job" | "custom"
@@ -69,6 +75,9 @@ export function calculateEventAnnualImpact(impacts: EventImpact[]): number {
         impact.purchase.loanTermMonths
       )
       return sum + monthly * 12
+    }
+    if (impact.type === "add_cash_purchase") {
+      return sum + (impact.purchase.price / impact.purchase.spreadMonths) * 12
     }
     if (impact.type === "income_change") {
       return sum - impact.annualAmount

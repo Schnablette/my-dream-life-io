@@ -22,6 +22,9 @@ function getMonthlyImpact(event: LifeEvent): number {
         )
       )
     }
+    if (impact.type === "add_cash_purchase") {
+      return sum + impact.purchase.price / impact.purchase.spreadMonths
+    }
     if (impact.type === "add_expense") {
       const multipliers = { year: 1 / 12, month: 1, week: 52 / 12, day: 365 / 12 }
       return sum + impact.expense.amount * multipliers[impact.expense.frequency]
@@ -33,21 +36,20 @@ function getMonthlyImpact(event: LifeEvent): number {
   }, 0)
 }
 
-const CATEGORY_LABELS: Record<string, string> = {
-  purchase: "Purchase",
-  income: "Income",
-  job: "Job",
-  custom: "Custom",
+function getImpactBadge(event: LifeEvent): string {
+  const type = event.impacts[0]?.type
+  if (type === "add_loan") return "Loan"
+  if (type === "add_cash_purchase") return "Cash"
+  return "Event"
 }
 
 export function EventList({ events, onDelete }: EventListProps) {
   return (
     <div className="mt-6">
-      <h3 className="mb-3 font-semibold text-foreground">Life Events</h3>
-      {events.length === 0 && (
+{events.length === 0 && (
         <div className="flex flex-col items-center justify-center rounded-md border border-dashed border-border py-10 text-center text-muted-foreground">
-          <p className="text-sm font-medium">No events yet</p>
-          <p className="mt-1 text-sm">Add a life event above to see its impact</p>
+          <p className="text-sm font-medium">No purchases yet</p>
+          <p className="mt-1 text-sm">Add a big purchase above to see its monthly cost</p>
         </div>
       )}
       <div className="space-y-2">
@@ -59,7 +61,7 @@ export function EventList({ events, onDelete }: EventListProps) {
               className="flex items-center gap-2 rounded-md border border-border bg-white px-3 py-1"
             >
               <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
-                {CATEGORY_LABELS[event.category] ?? event.category}
+                {getImpactBadge(event)}
               </span>
               <span className="flex-1 text-sm text-foreground">{event.name}</span>
               <span className="text-sm font-medium text-foreground">
