@@ -1,6 +1,7 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useCallback } from "react"
+import LZString from "lz-string"
 import { toPng } from "html-to-image"
 import type { Expense, Frequency, LifeEvent } from "./types"
 import { frequencyMultipliers, calculateEventAnnualImpact } from "./types"
@@ -12,12 +13,22 @@ import { EventList } from "./EventList"
 import { SalaryResults } from "./SalaryResults"
 import { RatesSettings } from "./RatesSettings"
 
-export function Calculator() {
-  const [expenses, setExpenses] = useState<Expense[]>([])
-  const [events, setEvents] = useState<LifeEvent[]>([])
-  const [taxRate, setTaxRate] = useState(25)
-  const [savingsRate, setSavingsRate] = useState(20)
+interface CalculatorProps {
+  initialState?: {
+    expenses: Expense[]
+    events: LifeEvent[]
+    taxRate: number
+    savingsRate: number
+  }
+}
+
+export function Calculator({ initialState }: CalculatorProps) {
+  const [expenses, setExpenses] = useState<Expense[]>(initialState?.expenses ?? [])
+  const [events, setEvents] = useState<LifeEvent[]>(initialState?.events ?? [])
+  const [taxRate, setTaxRate] = useState(initialState?.taxRate ?? 25)
+  const [savingsRate, setSavingsRate] = useState(initialState?.savingsRate ?? 20)
   const [editingId, setEditingId] = useState<string | null>(null)
+  const [shareState, setShareState] = useState<"idle" | "loading" | "copied" | "error">("idle")
   const calculatorRef = useRef<HTMLDivElement>(null)
 
   const calculateAnnualSalary = () => {
@@ -84,6 +95,30 @@ export function Calculator() {
     setSavingsRate(20)
   }
 
+  const handleShare = useCallback(async () => {
+    setShareState("loading")
+    try {
+      const state = { expenses, events, taxRate, savingsRate }
+      const compressed = LZString.compressToEncodedURIComponent(JSON.stringify(state))
+      const longUrl = `${window.location.origin}/calculator?d=${compressed}`
+
+      const res = await fetch("/api/shorten", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: longUrl }),
+      })
+
+      if (!res.ok) throw new Error("Failed to shorten URL")
+      const { shortUrl } = await res.json()
+      await navigator.clipboard.writeText(shortUrl)
+      setShareState("copied")
+      setTimeout(() => setShareState("idle"), 2500)
+    } catch {
+      setShareState("error")
+      setTimeout(() => setShareState("idle"), 2500)
+    }
+  }, [expenses, events, taxRate, savingsRate])
+
   const handleDownload = async () => {
     if (!calculatorRef.current) return
 
@@ -111,7 +146,7 @@ export function Calculator() {
   return (
     <div ref={calculatorRef}>
       <div className="mx-auto max-w-6xl py-6">
-        <CalculatorHeader onReset={reset} onDownload={handleDownload} />
+        <CalculatorHeader onReset={reset} onDownload={handleDownload} onShare={handleShare} shareState={shareState} />
 
         <div className="grid gap-6 lg:grid-cols-2">
           <div className="space-y-6">

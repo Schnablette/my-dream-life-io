@@ -1,5 +1,7 @@
 import { Calculator } from "@/components/calculator"
 import Head from "next/head"
+import { useState, useEffect } from "react"
+import LZString from "lz-string"
 
 const SITE_URL = "https://www.mydreamlife.io"
 
@@ -20,6 +22,22 @@ const jsonLd = {
 }
 
 export default function CalculatorPage() {
+  const [initialState, setInitialState] = useState<object | undefined>(undefined)
+
+  useEffect(() => {
+    const d = new URLSearchParams(window.location.search).get("d")
+    if (!d) { console.log("[share] no d param"); return }
+    try {
+      const decompressed = LZString.decompressFromEncodedURIComponent(d)
+      console.log("[share] decompressed length:", decompressed?.length)
+      const parsed = JSON.parse(decompressed)
+      console.log("[share] parsed expenses:", parsed?.expenses?.length)
+      setInitialState(parsed)
+    } catch(e) {
+      console.error("[share] parse failed:", e)
+    }
+  }, [])
+
   const title = "Reverse Budget Calculator — Find Your Dream Lifestyle Salary | MyDreamLife.io"
   const description =
     "Stop budgeting backwards. Enter the lifestyle you want, and the free reverse budget calculator tells you exactly what salary you need to earn to afford it."
@@ -49,7 +67,7 @@ export default function CalculatorPage() {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </Head>
-      <Calculator />
+      <Calculator key={initialState ? "shared" : "default"} initialState={initialState} />
     </>
   )
 }
