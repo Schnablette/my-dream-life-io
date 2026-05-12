@@ -14,8 +14,7 @@ interface ExpenseListProps {
 export function ExpenseList({ expenses, onEdit, onDelete }: ExpenseListProps) {
   return (
     <div className="mt-6">
-      <h3 className="mb-3 font-semibold text-foreground">Expense Items</h3>
-      {expenses.length === 0 && (
+{expenses.length === 0 && (
         <div className="flex flex-col items-center justify-center rounded-md border border-dashed border-border py-10 text-center text-muted-foreground">
           <p className="text-sm font-medium">No expenses yet</p>
           <p className="mt-1 text-sm">Add an expense above to calculate your salary</p>
